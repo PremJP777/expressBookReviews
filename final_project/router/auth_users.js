@@ -7,7 +7,7 @@ let users = [];
 
 const isValid = (username)=>{ //returns boolean
 //write code to check is the username is valid
-    for(let i=0;i<=users.length;i++){
+    for(let i=0;i<users.length;i++){
         if(users[i].username==username)
         {
             return false;
@@ -53,7 +53,18 @@ regd_users.post("/login", (req,res) => {
 // Add a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
   //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+  let isbn=req.params.isbn;
+  let review =req.query.review;
+  let username=req.session.authorization['username'];
+  for(item in books[isbn].reviews)
+  {
+    if(item==username){
+        books[isbn].reviews[item]=review;
+        res.send("Your review about the book with ISBN "+isbn+" has been updated");
+    }
+  }
+  books[isbn].reviews[username]=review;
+  res.send("The review has been added to the book with ISBN "+isbn);
 });
 
 module.exports.authenticated = regd_users;
